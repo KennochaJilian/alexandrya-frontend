@@ -1,0 +1,7 @@
+{
+  "name": "alexandrya-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
