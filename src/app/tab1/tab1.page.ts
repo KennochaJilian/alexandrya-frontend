@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, Inject} from '@angular/core';
+import {AquariusAuthService} from "aquarius-auth";
+import {Environment} from "aquarius-api";
 
 @Component({
   selector: 'app-tab1',
@@ -7,6 +9,9 @@ import { Component } from '@angular/core';
 })
 export class Tab1Page {
 
-  constructor() {}
+  constructor(authService: AquariusAuthService, @Inject('env') private env: Environment ) {
+    console.log('authService', authService.isConnected());
+    console.log(env.apiUrl)
+  }
 
 }
