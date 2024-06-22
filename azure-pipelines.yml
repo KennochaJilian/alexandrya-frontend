@@ -19,6 +19,7 @@ steps:
     echo registry=http://79.137.39.247:4873 > ~/.npmrc
     echo always-auth=true >> ~/.npmrc
     echo //79.137.39.247:4873/:_authToken=$(NPM_TOKEN) >> ~/.npmrc
+    echo $(buildVersion)
   displayName: 'Setup .npmrc file'
 
 - script: npm install
