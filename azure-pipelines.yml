@@ -3,41 +3,44 @@ trigger:
   - develop
 
 variables:
-  ${{ if eq( variables['Build.SourceBranchName'], 'master' ) }}:
+  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
     buildVersion: 'production'
     targetFolder: '/var/www/alexandrya.aquarius.irish'
-  ${{ if eq( variables['Build.SourceBranchName'], 'develop' ) }}:
+  ${{ if eq(variables['Build.SourceBranchName'], 'develop') }}:
     buildVersion: 'test'
     targetFolder: '/var/www/alexandrya.test.aquarius.irish'
 
-pool: Aquarius VPS Agent
+pool:
+  name: 'Aquarius VPS Agent'
 
 steps:
-  - task: npmAuthenticate@0
-    inputs:
-      workingFile: '.npmrc'
-      customEndpoint: 'Aquarius-npm-registry'
+- script: |
+    touch ~/.npmrc
+    echo registry=http://79.137.39.247:4873 > ~/.npmrc
+    echo always-auth=true >> ~/.npmrc
+    echo //79.137.39.247:4873/:_authToken=$(NPM_TOKEN) >> ~/.npmrc
+  displayName: 'Setup .npmrc file'
 
-  - script: npm install
-    displayName: 'npm install'
-    workingDirectory: $(Build.SourcesDirectory)
+- script: npm install
+  displayName: 'npm install'
+  workingDirectory: $(Build.SourcesDirectory)
 
-  - script: npx ng lint
-    displayName: 'execute lint'
-    workingDirectory: $(Build.SourcesDirectory)
+- script: npx ng lint
+  displayName: 'execute lint'
+  workingDirectory: $(Build.SourcesDirectory)
 
-  - script: npx ng test  --browsers=ChromeHeadless --watch=false
-    displayName: 'execute test'
-    workingDirectory: $(Build.SourcesDirectory)
+- script: npx ng test --browsers=ChromeHeadless --watch=false
+  displayName: 'execute test'
+  workingDirectory: $(Build.SourcesDirectory)
 
-  - script: npm run build -c $(buildVersion)
-    displayName: 'npm build'
-    workingDirectory: $(Build.SourcesDirectory)
+- script: npm run build -c $(buildVersion)
+  displayName: 'npm build'
+  workingDirectory: $(Build.SourcesDirectory)
 
-  - task: CopyFilesOverSSH@0
-    inputs:
-      sshEndpoint: 'SSH Aquarius VPS'
-      sourceFolder: '$(Build.SourcesDirectory)/www/'
-      contents: '**'
-      targetFolder: '$(targetFolder)'
-      readyTimeout: '20000'
+- task: CopyFilesOverSSH@0
+  inputs:
+    sshEndpoint: 'SSH Aquarius VPS'
+    sourceFolder: '$(Build.SourcesDirectory)/www/'
+    contents: '**'
+    targetFolder: '$(targetFolder)'
+    readyTimeout: '20000'
