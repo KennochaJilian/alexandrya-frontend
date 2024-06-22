@@ -10,15 +10,9 @@ variables:
     buildVersion: 'test'
     targetFolder: '/var/www/alexandrya.test.aquarius.irish'
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: Aquarius VPS Agent
 
 steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '20.x'
-    displayName: 'Install Node.js'
-
   - script: npm install
     displayName: 'npm install'
     workingDirectory: $(Build.SourcesDirectory)
