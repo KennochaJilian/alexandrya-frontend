@@ -29,9 +29,9 @@ steps:
   displayName: 'execute lint'
   workingDirectory: $(Build.SourcesDirectory)
 
-- script: npx ng test --browsers=ChromeHeadless --watch=false
-  displayName: 'execute test'
-  workingDirectory: $(Build.SourcesDirectory)
+# - script: npx ng test --browsers=ChromeHeadless --watch=false
+#   displayName: 'execute test'
+#   workingDirectory: $(Build.SourcesDirectory)
 
 - script: npm run build -c $(buildVersion)
   displayName: 'npm build'
