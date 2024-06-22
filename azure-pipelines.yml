@@ -13,6 +13,11 @@ variables:
 pool: Aquarius VPS Agent
 
 steps:
+  - task: npmAuthenticate@0
+    inputs:
+      workingFile: '.npmrc'
+      customEndpoint: 'Aquarius-npm-registry'
+
   - script: npm install
     displayName: 'npm install'
     workingDirectory: $(Build.SourcesDirectory)
